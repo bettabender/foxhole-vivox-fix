@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Foxhole — голос с Happ VPN</title>
+<style>
+body{margin:0;background:#131918;color:#eaf0ed;font:17px/1.6 system-ui,Segoe UI,sans-serif}main{max-width:840px;margin:auto;padding:44px 24px 72px}h1{font-size:36px;line-height:1.15;margin:12px 0 20px}h2{font-size:23px;margin-top:32px;color:#9fdfc7}p,li{max-width:76ch}a{color:#a8e9d1}code{background:#24302b;border-radius:5px;padding:2px 6px;font-size:15px}.meta{color:#a8b8b0}.card{border:1px solid #34493f;border-radius:14px;padding:18px 24px;background:#1a2520;margin:24px 0}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:10px;border-bottom:1px solid #34493f}small{color:#b0bdb6}li{margin:8px 0}@media print{body{background:white;color:#111}h2,a{color:#17684b}.card{background:#f4f8f6}code{background:#eee}}
+</style>
+<main>
+<div class="meta">Версия 1.0.0 · Windows · 20 октября 2026</div>
+<h1>Foxhole: игра через VPN,<br>голос Vivox напрямую</h1>
+<p>Если без VPN голос работает, а при включённом Happ пропадает, попробуйте два точечных исключения Vivox. Игровой трафик продолжит обрабатывать VPN.</p>
+<div class="card"><strong>Схема сработала с Happ 4.5.3 (624), Happ TUN и JSON-подпиской на Windows 11.</strong><p>Работу голоса подтвердил пользователь после изменения маршрутов. Для других VPN и всех голосовых серверов результат не гарантирован.</p></div>
+<h2>Установка в один клик</h2>
+<ol><li>Распакуйте ZIP целиком в отдельную папку.</li><li>Подключитесь к обычному интернету и включите Happ.</li><li>Запустите <code>Install.cmd</code> и подтвердите запрос Windows.</li><li>Перезапустите Foxhole либо переподключите голос в настройках звука.</li><li>Проверьте: работают игровые сервисы, вы слышите игроков и они слышат вас.</li></ol>
+<p>Скрипт сам найдёт Ethernet или Wi-Fi и адрес обычного шлюза. VPN-ключи и адрес роутера вводить не нужно.</p>
+<h2>Что внутри</h2>
+<table><tr><th>Файл</th><th>Действие</th></tr><tr><td><code>Install.cmd</code></td><td>Добавляет исключения и автовосстановление.</td></tr><tr><td><code>Check.cmd</code></td><td>Показывает выбранный путь, ничего не меняет.</td></tr><tr><td><code>Refresh.cmd</code></td><td>Восстанавливает маршруты для текущей сети.</td></tr><tr><td><code>Remove.cmd</code></td><td>Удаляет задачу и маршруты, созданные фиксом.</td></tr></table>
+<h2>Точные исключения</h2>
+<p><code>85.236.98.180/32</code> и <code>85.236.98.181/32</code> идут напрямую через физический шлюз. Для остальных адресов сохраняются существующие маршруты. Исключения действуют для TCP и UDP к этим двум IP.</p>
+<p>Это подтверждённые адреса сервисов Vivox, а не полный список всех возможных SIP/RTP-серверов. Фикс не исключает весь процесс Foxhole и не отправляет весь UDP напрямую.</p>
+<h2>После перезагрузки</h2>
+<p>Установщик создаёт задачу <code>FoxholeVivoxFix</code>. Она запускает локальный скрипт от SYSTEM при старте Windows, входе пользователя и подключении сети, заново определяя физический шлюз. Файлы находятся в <code>Program Files\FoxholeVivoxFix</code>, обычным пользователям доступно только чтение. Постоянного фонового процесса нет.</p>
+<p>Чужие маршруты сохраняются. При конфликтующем маршруте применение останавливается. DNS, firewall, антивирус, настройки VPN и игры не меняются. В пакете нет VPN-ключей, пользовательских логов и личных настроек автора.</p>
+<h2>Если не заработало</h2>
+<ol><li>Запустите <code>Check.cmd</code>: для двух IP должен отображаться Ethernet/Wi-Fi, а не TUN.</li><li>Полностью закройте игру и запустите снова: старые соединения могли остаться на VPN.</li><li>После смены сети используйте <code>Refresh.cmd</code>.</li><li>Если путь верный, а голоса нет, нужно определить фактические SIP/RTP-адреса в этой сессии. Не добавляйте произвольные подсети и весь UDP.</li></ol>
+<p>VPN с kill switch может запрещать прямые соединения. Если Vivox блокируется и без VPN, этот способ также не подходит. Изменение IP Vivox потребует нового подтверждённого списка — автоматического обновления списка в версии 1.0.0 нет.</p>
+<h2>Что проверено</h2>
+<p>Рабочая схема проверена в игре у одного пользователя. У скрипта проверены синтаксис, определение шлюза, повторное применение, смена шлюза, восстановление после потери маршрутов и защита чужих правил на подставной таблице маршрутов. Планировщик Windows принял XML задачи без регистрации.</p>
+<p><strong>Установка всего пакета и реальный автозапуск после перезагрузки ещё не проверялись.</strong> Это открытые скрипты Windows, а не подписанный EXE.</p>
+<p><a href="README-ru.md">Полная техническая инструкция</a> · <a href="https://www.happ.su/main/dev-docs/routing">Маршрутизация Happ</a> · <a href="https://learn.microsoft.com/en-us/powershell/module/nettcpip/new-netroute?view=windowsserver2025-ps">Маршруты Windows</a></p>
+</main></html>

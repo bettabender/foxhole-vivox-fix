@@ -1,0 +1,8 @@
+dist/
+tests/fix-tests/
+*.etl
+*.pcap
+*.pcapng
+*.log
+routes.json
+last-result.json

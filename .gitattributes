@@ -1,0 +1,4 @@
+*.ps1 -text
+*.cmd -text
+*.zip binary
+SHA256SUMS.txt -text

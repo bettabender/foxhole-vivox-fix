@@ -1,0 +1,14 @@
+name: Validate Windows scripts
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate task XML and mocked route lifecycle
+        shell: powershell
+        run: .\tests\Test-Foxhole-Fix.ps1
