@@ -5,12 +5,12 @@ param(
     [switch]$Quiet
 )
 $ErrorActionPreference = 'Stop'
-$Version = '1.0.0'
+$Version = '1.0.1'
 $TaskName = 'FoxholeVivoxFix'
 $InstallDir = Join-Path $env:ProgramFiles 'FoxholeVivoxFix'
 $InstalledScript = Join-Path $InstallDir 'Foxhole-Vivox-Fix.ps1'
 $StatePath = Join-Path $InstallDir 'routes.json'
-$Endpoints = @('85.236.98.180', '85.236.98.181')
+$Endpoints = @('85.236.98.180', '85.236.98.181', '85.236.105.136')
 $Prefixes = @($Endpoints | ForEach-Object { $_ + '/32' })
 
 function Get-PhysicalGateway {
@@ -140,7 +140,7 @@ function Get-AutoRestoreTaskXml {
     return @"
 <?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
-  <RegistrationInfo><Description>Foxhole Vivox Fix: restore two direct routes.</Description></RegistrationInfo>
+  <RegistrationInfo><Description>Foxhole Vivox Fix: restore Vivox direct routes.</Description></RegistrationInfo>
   <Triggers>
     <BootTrigger><Enabled>true</Enabled><Delay>PT10S</Delay></BootTrigger>
     <LogonTrigger><Enabled>true</Enabled><Delay>PT10S</Delay></LogonTrigger>
